@@ -1,1 +1,3 @@
 gdsbook
+notebooks/cache/*
+notebooks/.ipynb_checkpoints/lecture-checkpoint.ipynb
