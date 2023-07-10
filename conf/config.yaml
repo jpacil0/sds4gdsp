@@ -1,5 +1,5 @@
 fake_data:
     num_subs: 100
     num_cellsites: 200
-    min_age: 18
-    max_age: 62
+    min_age: 18 # legal age in ph, just a heuristic
+    max_age: 72 # life expectancy in ph ao 2022 
