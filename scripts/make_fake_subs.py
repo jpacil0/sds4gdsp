@@ -15,7 +15,7 @@ random.seed(2023)
 fake_data = pd.DataFrame()
 
 for i in range(num_subs):
-    uid = f"glo-{i}"
+    uid = f"glo-{i+1}"
     gender = random.choice(["male", "female"])
     name = fake.name_male() if gender=="male" else fake.name_female()
     age = random.randint(min_age, max_age)
@@ -32,3 +32,6 @@ for i in range(num_subs):
         ), index=[0]
     )
     fake_data = pd.concat([fake_data, data], ignore_index=True)
+
+filepath = "data/fake_subs.csv"
+fake_data.to_csv(filepath, index=False)
