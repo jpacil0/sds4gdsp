@@ -22,3 +22,8 @@ gadm = gadm.loc[town_filter]
 # save file to local disk
 filepath = f"data/shapefile/gadm_{town_keyword.lower()}.gpkg"
 gadm.reset_index(drop=True).to_file(filepath, driver="GPKG")
+
+# ADD CODE HERE TO GENERATE FAKE CELLSITES
+# 1. Make bounding box for town of interest
+# 2. Add coords based on poisson distribution
+# 3. Persist shapefile to local disk
