@@ -3,6 +3,11 @@ We'll be adding some descriptors used in the Unified User Profile (UUP).
 OUTPUT: 'data/fake_subs.csv'
 """
 
+# import os
+# os.chdir("../")
+# curr_dir = os.getcwd()
+# print(f"working @: {curr_dir}")
+
 import random
 import pandas as pd
 from omegaconf import OmegaConf
@@ -11,16 +16,18 @@ fake = Faker()
 
 PATH_CONFIG = "conf/config.yaml"
 cfg = OmegaConf.load(PATH_CONFIG)
-num_subs = cfg.fake_data.num_subs
-min_age = cfg.fake_data.min_age
-max_age = cfg.fake_data.max_age
+seed = cfg.seed
+num_subs = cfg.fake_subs.num_subs
+min_age = cfg.fake_subs.min_age
+max_age = cfg.fake_subs.max_age
 
-random.seed(2023)
+# for reproducibility
+random.seed(seed)
 
-fake_data = pd.DataFrame()
+fake_subs = pd.DataFrame()
 
 for i in range(num_subs):
-    uid = f"glo-{i+1}"
+    uid = f"glo-sub-{i+1}"
     gender = random.choice(["male", "female"])
     name = fake.name_male() if gender=="male" else fake.name_female()
     age = random.randint(min_age, max_age)
@@ -36,7 +43,7 @@ for i in range(num_subs):
             gcash_user_indicator=gcash_user_indicator
         ), index=[0]
     )
-    fake_data = pd.concat([fake_data, data], ignore_index=True)
+    fake_subs = pd.concat([fake_subs, data], ignore_index=True)
 
 filepath = "data/fake_subs.csv"
-fake_data.to_csv(filepath, index=False)
+fake_subs.to_csv(filepath, index=False)
