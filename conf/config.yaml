@@ -1,6 +1,12 @@
-fake_data:
+seed: 2023
+
+fake_subs:
     num_subs: 100
-    num_cellsites: 200
     min_age: 18 # legal age in ph, just a heuristic
     max_age: 72 # life expectancy in ph ao 2022
+
+fake_cellsites:
     gadm_version: 4.0 # see https://gadm.org/data.html
+    sample_frac: 0.5 # how much to keep from init node count
+    min_distance: 300 # this is haversine distance in meters
+    town_keyword: Taguig
