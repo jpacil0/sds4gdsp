@@ -1,6 +1,6 @@
 seed: 2023
 
-fake_subs:
+fake_subscribers:
     num_subs: 100
     min_age: 18 # legal age in ph, just a heuristic
     max_age: 72 # life expectancy in ph ao 2022
@@ -10,3 +10,5 @@ fake_cellsites:
     sample_frac: 0.5 # how much to keep from init node count
     min_distance: 300 # this is haversine distance in meters
     town_keyword: Taguig
+
+fake_transactions:
