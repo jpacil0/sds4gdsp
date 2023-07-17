@@ -3,3 +3,4 @@ fake_data:
     num_cellsites: 200
     min_age: 18 # legal age in ph, just a heuristic
     max_age: 72 # life expectancy in ph ao 2022
+    gadm_version: 4.0 # see https://gadm.org/data.html
