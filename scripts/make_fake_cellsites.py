@@ -1,27 +1,74 @@
-# Download Instructions
-# 1. Goto https://gadm.org/download_country.html#google_vignette
-# 2. Select Philippines then download GeoJSON and select level2
-# 3. Put it in your root folder `data/shapefiles/<file>`
+"""This python script creates a fake cellsites dataset.
+We'll be assuming here that the cellsites are built exclusively on road intersections
+and is unique per location (node in the graph); this does not reflect the real-world.
+OUTPUT: 'data/fake_cellsites.gpkg'
+"""
 
-# REMOVE CODE BELOW TEMP ONLY
-# import os
-# os.chdir("../")
+import os
+os.chdir("../")
+curr_dir = os.getcwd()
+print(f"working @: {curr_dir}")
 
+import shapely
+import osmnx as ox
 import geopandas as gpd
+from gadm import GADMDownloader
+from omegaconf import OmegaConf
+from functools import reduce
 
-filepath = "data/shapefile/gadm41_PHL_2.json.zip"
-gadm = gpd.read_file(filepath)
+# fetch configs
+PATH_CONFIG = "conf/config.yaml"
+cfg = OmegaConf.load(PATH_CONFIG)
+gadm_version = cfg.fake_data.gadm_version
 
-# filter the town of interest
-# let's use Taguig City for now
-# change when you want to explore
+# download gadm PH data
+country_name = "Philippines"
+ad_level = 2 # city or municipality
+downloader = GADMDownloader(version=str(gadm_version))
+gadm = downloader.get_shape_data_by_country_name(
+    country_name=country_name, ad_level=ad_level
+)
+
+# this should be a non-empty geodataframe
+assert len(gadm) > 0
+
+# filter the town of interest accordingly
+# let's use Taguig City for this exercise
+# we want to isolate the town boundaries
 town_keyword = "Taguig"
 town_filter = gadm.NAME_2==town_keyword
-gadm = gadm.loc[town_filter]
+polygon = gadm.loc[town_filter].geometry.item()
+
+# this should be a unique shapely multipolygon
+# with lng, lat format when the bounds is unpacked
+assert type(polygon) == shapely.geometry.MultiPolygon
+assert len(polygon.geoms) == 1
+assert reduce(lambda a, b: a - b, list(polygon.bounds)) < 0
+
+# download the road network in taguig
+# for more info, see docs in OSMNx 
+network_type = "drive"
+simplify = True
+retain_all = False
+truncate_by_edge = True
+clean_periphery = True
+G = ox.graph_from_polygon(
+    polygon=polygon,
+    network_type=network_type,
+    simplify=simplify,
+    retain_all=retain_all,
+    truncate_by_edge=truncate_by_edge,
+    clean_periphery=clean_periphery
+)
+
+# this should be a non-empty graph
+assert len(G.nodes) > 0
+
+# you can visualize the download road network like so
+# ox.plot_graph(G)
 
 # save file to local disk
-filepath = f"data/shapefile/gadm_{town_keyword.lower()}.gpkg"
-gadm.reset_index(drop=True).to_file(filepath, driver="GPKG")
+# filepath = f"data/shapefile/gadm_{town_keyword.lower()}.gpkg"
 
 # ADD CODE HERE TO GENERATE FAKE CELLSITES
 # 1. Make bounding box for town of interest
