@@ -1,4 +1,5 @@
-# sds4gdsp
-intro to spatial data science for the globe data science program
+TODO
 
-1. Setup
+1. Add boilerplate __name__ main calls in scripts to make fake data
+2. Update notebook! Start with the mobility index prob then work backwards
+3. Double check with the team the RKRA process for the notebook incl setup
