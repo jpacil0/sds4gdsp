@@ -8,6 +8,7 @@ curr_dir = os.getcwd()
 print(f"working @: {curr_dir}")
 
 import random
+import numpy as np
 import pandas as pd
 from itertools import combinations
 from omegaconf import OmegaConf
