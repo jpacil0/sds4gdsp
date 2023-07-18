@@ -1,6 +1,6 @@
 import math
+import numpy as np
 import pandas as pd
-import geopandas as gpd
 from shapely.geometry import Point
 from typing import List
 from shapely.wkt import loads
@@ -42,3 +42,11 @@ def calc_haversine_distance(p1: str, p2: str) -> float:
     c = 2 * math.asin(math.sqrt(a))
     d = c * R * 1_000 # convert back to meters
     return d
+
+def softmax(arr: np.ndarray) -> np.ndarray:
+    # subtracting the max value for numerical stability
+    e_x = np.exp(arr - np.max(arr))
+    return e_x / np.sum(e_x)
+
+def z_score(col):
+    return (col - col.mean()) / col.std()

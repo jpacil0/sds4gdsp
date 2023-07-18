@@ -11,7 +11,8 @@ import random
 import pandas as pd
 from itertools import combinations
 from omegaconf import OmegaConf
-from sds4gdsp.processor import calc_haversine_distance
+from sklearn.preprocessing import StandardScaler
+from sds4gdsp.processor import calc_haversine_distance, z_score
 
 PATH_CONFIG = "conf/config.yaml"
 cfg = OmegaConf.load(PATH_CONFIG)
@@ -38,8 +39,42 @@ dist_matrix = dist_matrix.merge(fake_cellsites, left_on="site2", right_on="uid")
     .rename(columns={"coords": "coords2"})\
     .drop(columns=["uid"])
 dist_matrix["distance"] = dist_matrix.apply(lambda x: calc_haversine_distance(x.coords1, x.coords2), axis=1)
-dist_matrix.sort_values(by=["site1", "distance"], ascending=[0, 0], inplace=True)
+dist_matrix["distance_scaled"] = dist_matrix.groupby("site1")["distance"].apply(lambda col: (col - col.mean()) / col.std()).tolist()
+dist_matrix["latch_proba"] = dist_matrix.groupby("site1")["distance_scaled"].apply(lambda arr: softmax(arr)).tolist()
 
+
+
+dist_matrix.groupby("site1").distance.apply(
+    lambda x: scaler.fit_transform(x.to_numpy().reshape(-1, 1)).reshape(1, len(x))[0]
+).reset_index()
+
+# next steps
+# 1. standardize or scale
+# 2. invert the order? sub 1
+# 2. apply softmax
+
+scaler = StandardScaler()
+site_filter = dist_matrix.site1=="glo-cel-99"
+dist_matrix_sample = dist_matrix.loc[site_filter]
+arr = dist_matrix_sample.distance.to_numpy()
+arr_scaled = scaler.fit_transform(arr.reshape(-1, 1))\
+    .reshape(1, len(arr))[0]
+
+scaler.fit_transform(np.array([1, 2, 3]).reshape(-1, 1)).reshape(1, 3)
+
+
+# compare dist
+fig, ax = plt.subplots(1, 2, figsize=(10, 5))
+pd.Series(arr).hist(ax=ax[0], color="blue", alpha=0.1)
+pd.Series(arr_scaled).hist(ax=ax[1], color="red", alpha=0.1)
+
+
+np.sum(softmax(arr_scaled))
+
+# standardscaler -> softmax
+
+
+random.choices?
 
 # save file to local disk
 # fake_transactions = ...
