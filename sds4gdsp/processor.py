@@ -48,5 +48,5 @@ def softmax(arr: np.ndarray) -> np.ndarray:
     e_x = np.exp(arr - np.max(arr))
     return e_x / np.sum(e_x)
 
-def z_score(col):
-    return (col - col.mean()) / col.std()
+def minmax_scale(arr):
+    return (arr - arr.min()) / (arr.max() - arr.min())
