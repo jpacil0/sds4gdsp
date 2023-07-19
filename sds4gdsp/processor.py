@@ -43,10 +43,17 @@ def calc_haversine_distance(p1: str, p2: str) -> float:
     d = c * R * 1_000 # convert back to meters
     return d
 
-def softmax(arr: np.ndarray) -> np.ndarray:
+def apply_softmax(arr: np.ndarray) -> np.ndarray:
     # subtracting the max value for numerical stability
     e_x = np.exp(arr - np.max(arr))
     return e_x / np.sum(e_x)
 
-def minmax_scale(arr):
+def scale_minmax(arr):
     return (arr - arr.min()) / (arr.max() - arr.min())
+
+
+def standardize_numeric_col(col):
+    mean = np.mean(col)
+    std = np.std(col)
+    standardized_col = (col - mean) / std
+    return standardized_col

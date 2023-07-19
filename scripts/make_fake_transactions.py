@@ -10,10 +10,10 @@ print(f"working @: {curr_dir}")
 import random
 import numpy as np
 import pandas as pd
-from itertools import combinations
+from itertools import permutations
 from omegaconf import OmegaConf
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
-from sds4gdsp.processor import calc_haversine_distance, z_score
+from sds4gdsp.processor import calc_haversine_distance, scale_minmax, apply_softmax
 
 PATH_CONFIG = "conf/config.yaml"
 cfg = OmegaConf.load(PATH_CONFIG)
@@ -31,9 +31,10 @@ fake_cellsites = pd.read_csv(filepath_cellsites)
 # make a distance matrix as reference, here are the assumptions:
 # 1: the hop probability is a function of distance
 # 2: the sub is always moving? check this
-scaler = MinMaxScaler()
 scaler = StandardScaler()
-cellsite_pairs = list(combinations(fake_cellsites.uid.tolist(), 2))
+scaler = MinMaxScaler()
+
+cellsite_pairs = list(permutations(fake_cellsites.uid.tolist(), 2))
 dist_matrix = pd.DataFrame(cellsite_pairs, columns=["site1", "site2"])
 dist_matrix = dist_matrix.merge(fake_cellsites, left_on="site1", right_on="uid")\
     .rename(columns={"coords": "coords1"})\
@@ -42,15 +43,20 @@ dist_matrix = dist_matrix.merge(fake_cellsites, left_on="site2", right_on="uid")
     .rename(columns={"coords": "coords2"})\
     .drop(columns=["uid"])
 dist_matrix["distance"] = dist_matrix.apply(lambda x: calc_haversine_distance(x.coords1, x.coords2), axis=1)
-dist_matrix["distance_scaled"] = dist_matrix.groupby("site1")["distance"].apply(lambda arr: 1 - minmax_scale(arr)).tolist()
-dist_matrix["latch_proba"] = dist_matrix.groupby("site1")["distance_scaled"].apply(lambda arr: softmax(arr)).tolist()
+dist_matrix = dist_matrix.sort_values(
+    by=["site1", "site2"],
+    key=lambda col: col.apply(lambda x: int(x.split("-")[-1])),
+    ascending=[True, True]
+)\
+    .reset_index(drop=True)
+scaler = StandardScaler()
+dist_matrix["distance_scaled"] = dist_matrix.groupby("site1")["distance"].apply(
+    lambda arr: 1 - scale_minmax(arr)
+).tolist()
+dist_matrix["latch_proba"] = dist_matrix.groupby("site1")["distance_scaled"].apply(lambda arr: apply_softmax(arr)).tolist()
 
-dist_matrix.groupby("site1").latch_proba.sum()
-
-
-dist_matrix.groupby("site1").distance.apply(
-    lambda x: scaler.fit_transform(x.to_numpy().reshape(-1, 1)).reshape(1, len(x))[0]
-).reset_index()
+# check this out, this should be 111
+dist_matrix.groupby("site1").latch_proba.sum().sum()
 
 # next steps
 # 1. standardize or scale; change to minmax scaling
@@ -60,16 +66,15 @@ dist_matrix.groupby("site1").distance.apply(
 
 site_filter = dist_matrix.site1=="glo-cel-1"
 dist_matrix_sample = dist_matrix.loc[site_filter]
-arr = dist_matrix_sample.distance_scaled.to_numpy()
-np.sum(softmax(arr))
-
-scaler.fit_transform(np.array([1, 2, 3]).reshape(-1, 1)).reshape(1, 3)
-
-
+dist_matrix_sample.latch_proba.hist()
 
 
 # standardscaler -> softmax
 
+from sklearn.preprocessing import StandardScaler
+
+arr = [1, 2, 3]
+scaler.fit_transform(np.array(arr).reshape(-1, 1)).flatten().tolist()
 
 random.choices?
 
