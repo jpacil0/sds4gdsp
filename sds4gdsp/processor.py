@@ -48,12 +48,11 @@ def apply_softmax(arr: np.ndarray) -> np.ndarray:
     e_x = np.exp(arr - np.max(arr))
     return e_x / np.sum(e_x)
 
-def scale_minmax(arr):
-    return (arr - arr.min()) / (arr.max() - arr.min())
+def convert_distances_to_probas(distances) -> np.ndarray:
+    reversed_distances = distances ** -1
+    # probas = np.exp(-a*scaled_distances)
+    probas = apply_softmax(distances)
+    return probas
 
-
-def standardize_numeric_col(col):
-    mean = np.mean(col)
-    std = np.std(col)
-    standardized_col = (col - mean) / std
-    return standardized_col
+def scale_feature(feature, scaler) -> np.ndarray:
+    return scaler.fit_transform(np.array(feature).reshape(-1, 1)).flatten()
