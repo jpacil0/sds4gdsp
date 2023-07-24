@@ -12,3 +12,4 @@ fake_cellsites:
     town_keyword: Taguig
 
 fake_transactions:
+    k_nearest_neighbor: 5 # controls "random-ness" of hop simulation
