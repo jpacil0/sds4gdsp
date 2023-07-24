@@ -2,5 +2,4 @@ gdsbook
 notebooks/cache/*
 notebooks/.ipynb_checkpoints/lecture-checkpoint.ipynb
 .DS_Store
-data/*
 cache/*
