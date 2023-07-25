@@ -21,6 +21,8 @@ k_nearest_neighbor = cfg.fake_transactions.k_nearest_neighbor
 start_date = cfg.fake_transactions.start_date
 num_days = cfg.fake_transactions.num_days
 
+HRS_IN_A_DAY = 24
+
 # for reproducibility
 random.seed(seed)
 
@@ -70,6 +72,11 @@ fake_transactions = pd.DataFrame()
 for idx, row in fake_subscribers.head(1).iterrows():
 
     curr_sub = row.uid
+
+    # sample a random hour as starting point, this is
+    # done to reflect the nature of data in data lake,
+    # meaning the sub hasn't moved from his/her prev
+    # loc from the previous day (not captured)
     curr_hr = random.sample(range(24), 1)[0]
 
     # sample home loc for sub, coin this as curr loc
@@ -87,7 +94,7 @@ for idx, row in fake_subscribers.head(1).iterrows():
         locs = []
         locs.append(curr_loc)
 
-        for hr in range(24):
+        for hr in range(curr_hr, HRS_IN_A_DAY):
 
             with_transaction = random.choice([True, False])
 
@@ -101,11 +108,14 @@ for idx, row in fake_subscribers.head(1).iterrows():
                 curr_loc = matrix.loc[filter_k].sample(1).site2.item()
                 locs.append(curr_loc)
 
+        subs = [curr_sub]*len(locs)
+        dts = [transaction_dt]*len(locs)
+
         data = pd.DataFrame(
-            dict(
-                sub_id=[curr_sub]*len(locs),
-                transaction_dt=[transaction_dt]*len(locs),
-                transaction_hr=hrs,
-                cel_id=locs
+            data=dict(
+                sub_id=subs,
+                cel_id=locs,
+                transaction_dt=dts,
+                transaction_hr=hrs
             ), index=range(len(locs))
         )
