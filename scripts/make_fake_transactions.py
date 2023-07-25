@@ -8,11 +8,13 @@ curr_dir = os.getcwd()
 print(f"working @: {curr_dir}")
 
 import random
+import shapely
 import pendulum
 import pandas as pd
 from itertools import permutations
 from omegaconf import OmegaConf
-from sds4gdsp.processor import calc_haversine_distance
+from sds4gdsp.processor import calc_haversine_distance, convert_cel_to_point
+from sds4gdsp.plotter import get_route_fig, load_images, plot_images
 
 PATH_CONFIG = "conf/config.yaml"
 cfg = OmegaConf.load(PATH_CONFIG)
@@ -125,3 +127,23 @@ for idx, row in fake_subscribers.iterrows():
         )
         fake_transactions = \
             pd.concat([fake_transactions, data], ignore_index=True)
+        
+# TESTING OF SUB DIAL
+d = fake_transactions.copy()
+sample_sub = d.sample(1).sub_id.item()
+d = d.loc[d.sub_id==sample_sub]
+days = d.transaction_dt.unique().tolist()
+route_figs = []
+for sample_day in days:
+    sites = fake_transactions\
+        .loc[fake_transactions.sub_id==sample_sub]\
+        .loc[fake_transactions.transaction_dt==sample_day]\
+        .cel_id.tolist()
+    points = list(map(lambda z: convert_cel_to_point(z, fake_cellsites), sites))
+    r = shapely.geometry.LineString(points)
+    route_figs.append(get_route_fig(r))
+for idx, fig in enumerate(route_figs):
+    fname = "sample/{}_tmp.jpg".format(idx+1)
+    fig.savefig(fname)
+imgs = load_images("sample")
+plot_images(imgs)
