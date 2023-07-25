@@ -147,3 +147,15 @@ for idx, fig in enumerate(route_figs):
     fig.savefig(fname)
 imgs = load_images("sample")
 plot_images(imgs)
+
+
+# TODO: 
+# 1. Add total travel distance calculation
+# 2. 
+
+
+0. Appendix
+1. Grammar of SDS
+2. Application: Calculating Telco Mobility Index
+3. Take Home Exam: Area Mobility (TBD)
+
