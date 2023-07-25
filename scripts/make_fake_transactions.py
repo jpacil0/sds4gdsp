@@ -77,7 +77,7 @@ for idx, row in fake_subscribers.head(1).iterrows():
     # done to reflect the nature of data in data lake,
     # meaning the sub hasn't moved from his/her prev
     # loc from the previous day (not captured)
-    curr_hr = random.sample(range(24), 1)[0]
+    curr_hr = random.sample(range(12), 1)[0]
 
     # sample home loc for sub, coin this as curr loc
     # let's assume that the first transaction of the
@@ -94,7 +94,7 @@ for idx, row in fake_subscribers.head(1).iterrows():
         locs = []
         locs.append(curr_loc)
 
-        for hr in range(curr_hr, HRS_IN_A_DAY):
+        for hr in range(curr_hr+1, HRS_IN_A_DAY):
 
             with_transaction = random.choice([True, False])
 
