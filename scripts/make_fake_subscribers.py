@@ -27,7 +27,7 @@ random.seed(seed)
 fake_subscribers = pd.DataFrame()
 
 for i in range(num_subs):
-    uid = f"glo-sub-{i+1}"
+    uid = f"glo-sub-{str(i+1).zfill(3)}"
     gender = random.choice(["male", "female"])
     name = fake.name_male() if gender=="male" else fake.name_female()
     age = random.randint(min_age, max_age)
