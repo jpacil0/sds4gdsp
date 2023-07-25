@@ -8,6 +8,7 @@ curr_dir = os.getcwd()
 print(f"working @: {curr_dir}")
 
 import random
+import pendulum
 import pandas as pd
 from itertools import permutations
 from omegaconf import OmegaConf
@@ -59,3 +60,52 @@ matrix.sort_values(
 # TODO: Add for loop, simulate the hops per sub per day
 # 1. Fetch sub, fetch date, init random origin
 # 2. Simulate hop based on matrix
+
+start_date = pendulum.parse(start_date, exact=True)
+end_date = start_date.add(days=num_days-1)
+period = pendulum.period(start_date, end_date)
+
+fake_transactions = pd.DataFrame()
+
+for idx, row in fake_subscribers.head(1).iterrows():
+
+    curr_sub = row.uid
+    curr_hr = random.sample(range(24), 1)[0]
+
+    # sample home loc for sub, coin this as curr loc
+    # let's assume that the first transaction of the
+    # month is the home loc of the sub (site level)
+    curr_loc = fake_cellsites.uid.sample(1).item()
+
+    for dt in period:
+
+        transaction_dt = str(dt)
+        
+        # init/reset accu for locs and hrs
+        hrs = []
+        hrs.append(curr_hr)
+        locs = []
+        locs.append(curr_loc)
+
+        for hr in range(24):
+
+            with_transaction = random.choice([True, False])
+
+            if with_transaction:
+
+                hrs.append(hr)
+
+                # identify next site hop based on ref matrix
+                # assume equal weighting for top k options
+                filter_k = matrix.site1 == curr_loc
+                curr_loc = matrix.loc[filter_k].sample(1).site2.item()
+                locs.append(curr_loc)
+
+        data = pd.DataFrame(
+            dict(
+                sub_id=[curr_sub]*len(locs),
+                transaction_dt=[transaction_dt]*len(locs),
+                transaction_hr=hrs,
+                cel_id=locs
+            ), index=range(len(locs))
+        )
