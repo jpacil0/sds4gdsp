@@ -149,13 +149,7 @@ imgs = load_images("sample")
 plot_images(imgs)
 
 
-# TODO: 
-# 1. Add total travel distance calculation
-# 2. 
-
-
-0. Appendix
-1. Grammar of SDS
-2. Application: Calculating Telco Mobility Index
-3. Take Home Exam: Area Mobility (TBD)
-
+# TODO:
+# 1. Add total travel distance
+# 2. Add radius of gyration
+# 3. Add activity entropy
