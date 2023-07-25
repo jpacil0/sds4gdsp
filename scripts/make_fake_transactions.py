@@ -20,6 +20,8 @@ seed = cfg.seed
 k_nearest_neighbor = cfg.fake_transactions.k_nearest_neighbor
 start_date = cfg.fake_transactions.start_date
 num_days = cfg.fake_transactions.num_days
+cap_start_hr = cfg.fake_transactions.cap_start_hr
+stay_proba = cfg.fake_transactions.stay_proba
 
 HRS_IN_A_DAY = 24
 
@@ -69,7 +71,7 @@ period = pendulum.period(start_date, end_date)
 
 fake_transactions = pd.DataFrame()
 
-for idx, row in fake_subscribers.head(1).iterrows():
+for idx, row in fake_subscribers.iterrows():
 
     curr_sub = row.uid
 
@@ -77,7 +79,7 @@ for idx, row in fake_subscribers.head(1).iterrows():
     # done to reflect the nature of data in data lake,
     # meaning the sub hasn't moved from his/her prev
     # loc from the previous day (not captured)
-    curr_hr = random.sample(range(12), 1)[0]
+    curr_hr = random.sample(range(cap_start_hr), 1)[0]
 
     # sample home loc for sub, coin this as curr loc
     # let's assume that the first transaction of the
@@ -96,7 +98,7 @@ for idx, row in fake_subscribers.head(1).iterrows():
 
         for hr in range(curr_hr+1, HRS_IN_A_DAY):
 
-            with_transaction = random.choice([True, False])
+            with_transaction = random.choices([True, False], [1-stay_proba, stay_proba])[0]
 
             if with_transaction:
 
@@ -111,11 +113,15 @@ for idx, row in fake_subscribers.head(1).iterrows():
         subs = [curr_sub]*len(locs)
         dts = [transaction_dt]*len(locs)
 
+        # append to fake transactions
         data = pd.DataFrame(
             data=dict(
                 sub_id=subs,
                 cel_id=locs,
                 transaction_dt=dts,
                 transaction_hr=hrs
-            ), index=range(len(locs))
+            ),
+            index=range(len(locs))
         )
+        fake_transactions = \
+            pd.concat([fake_transactions, data], ignore_index=True)

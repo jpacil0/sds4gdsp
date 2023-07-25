@@ -18,5 +18,5 @@ fake_transactions:
     start_date: '2023-06-01'
     num_days: 30
     # https://www.dailymail.co.uk/sciencetech/article-3042230/Sleeping-habits-world-revealed-wakes-grumpy-China-best-quality-shut-eye-South-Africa-wakes-earliest.html
-    cap_start_hr: 7 # wake up time of filipinos
+    cap_start_hr: 7 # controls the start hour of sub in a day
     
