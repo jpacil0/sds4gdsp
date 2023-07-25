@@ -16,6 +16,12 @@ def get_coords_from_graph(G: Graph, nodes: List[int]):
         coords.append((G.nodes[node]["x"], G.nodes[node]["y"]))
     return coords
 
+def convert_cel_to_point(cel_id: str, ref: pd.DataFrame):
+    """Convert cellsite to shapely point."""
+    coord = ref.loc[ref.uid==cel_id].coords.item()
+    point = loads(coord)
+    return point
+
 def dedupe_points(points: List[Point], distance_threshold: int):
     """Naive way to dedupe a points dataset given a distance threshold in meters."""
     pointpairs_df = pd.DataFrame(list(combinations(points, 2)), columns=["p1", "p2"])
@@ -50,8 +56,7 @@ def apply_softmax(arr: np.ndarray) -> np.ndarray:
 
 def convert_distances_to_probas(distances) -> np.ndarray:
     reversed_distances = distances ** -1
-    # probas = np.exp(-a*scaled_distances)
-    probas = apply_softmax(distances)
+    probas = apply_softmax(reversed_distances)
     return probas
 
 def scale_feature(feature, scaler) -> np.ndarray:
