@@ -1,6 +1,7 @@
 seed: 2023
 
 fake_subscribers:
+    filepath: data/fake_subscribers.csv
     num_subs: 100
     min_age: 18 # legal age in ph, just a heuristic
     max_age: 72 # life expectancy in ph ao 2022
