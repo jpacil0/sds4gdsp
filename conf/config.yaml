@@ -14,6 +14,7 @@ fake_cellsites:
     town_keyword: Taguig
 
 fake_transactions:
+    filepath: data/fake_transactions.csv
     # two params below controls the "random-ness" of hop simulation
     k_nearest_neighbor: 3
     stay_proba: 0.5

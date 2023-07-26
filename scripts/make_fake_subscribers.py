@@ -1,5 +1,4 @@
 """This python script creates a fake telco subscriber dataset.
-We'll be adding some descriptors used in the Unified User Profile (UUP).
 OUTPUT: 'data/fake_subscribers.csv'
 """
 
