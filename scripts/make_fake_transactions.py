@@ -12,8 +12,7 @@ import pendulum
 import pandas as pd
 from itertools import permutations
 from omegaconf import OmegaConf
-from sds4gdsp.processor import calc_haversine_distance, convert_cel_to_point
-from sds4gdsp.plotter import get_route_fig, load_images, plot_images
+from sds4gdsp.processor import calc_haversine_distance
 
 PATH_CONFIG = "conf/config.yaml"
 cfg = OmegaConf.load(PATH_CONFIG)
@@ -126,3 +125,9 @@ for idx, row in fake_subscribers.iterrows():
         )
         fake_transactions = \
             pd.concat([fake_transactions, data], ignore_index=True)
+        
+# save file to local disk
+filepath = f"data/fake_transactions.csv"
+fake_transactions["uid"] = [f"glo-txn-{str(i+1).zfill(5)}" for i in range(len(fake_transactions))]
+fake_transactions = fake_transactions[["uid", "sub_id", "cel_id", "transaction_dt", "transaction_hr"]]
+fake_transactions.to_csv(filepath, index=False)
