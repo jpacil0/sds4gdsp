@@ -31,7 +31,7 @@ def main(cfg: DictConfig) -> None:
     fake_subscribers = pd.DataFrame()
 
     for i in range(num_subs):
-        uid = f"glo-sub-{str(i+1).zfill(3)}"
+        sub_uid = f"glo-sub-{str(i+1).zfill(3)}"
         gender = random.choice(["male", "female"])
         name = fake.name_male() if gender=="male" else fake.name_female()
         age = random.randint(min_age, max_age)
@@ -39,7 +39,7 @@ def main(cfg: DictConfig) -> None:
         ewallet_user_indicator = random.choice(["Y", "N"])
         data = pd.DataFrame(
             dict(
-                uid=uid,
+                sub_uid=sub_uid,
                 gender=gender,
                 age=age,
                 name=name,

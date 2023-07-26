@@ -104,7 +104,7 @@ def main(cfg: DictConfig) -> None:
 
     # save file to local disk
     fake_cellsites = pd.DataFrame(dict(
-        uid=[f"glo-cel-{str(i+1).zfill(3)}" for i in range(len(deduped_points))],
+        cel_uid=[f"glo-cel-{str(i+1).zfill(3)}" for i in range(len(deduped_points))],
         coords=deduped_points
     ))
     fake_cellsites.to_csv(filepath_cellsites, index=False)

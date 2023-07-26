@@ -38,14 +38,14 @@ def main(cfg: DictConfig) -> None:
     fake_cellsites = pd.read_csv(filepath_cellsites)
 
     # start off with a cellsite permutation reference table
-    cellsite_pairs = list(permutations(fake_cellsites.uid.tolist(), 2))
+    cellsite_pairs = list(permutations(fake_cellsites.cel_uid.tolist(), 2))
     matrix = pd.DataFrame(cellsite_pairs, columns=["site1", "site2"])
-    matrix = matrix.merge(fake_cellsites, left_on="site1", right_on="uid")\
+    matrix = matrix.merge(fake_cellsites, left_on="site1", right_on="cel_uid")\
         .rename(columns={"coords": "coords1"})\
-        .drop(columns=["uid"])
-    matrix = matrix.merge(fake_cellsites, left_on="site2", right_on="uid")\
+        .drop(columns=["cel_uid"])
+    matrix = matrix.merge(fake_cellsites, left_on="site2", right_on="cel_uid")\
         .rename(columns={"coords": "coords2"})\
-        .drop(columns=["uid"])
+        .drop(columns=["cel_uid"])
 
     # filter only the top k possible sites-to-hop per site 
     matrix["distance"] = matrix.apply(lambda x: calc_haversine_distance(x.coords1, x.coords2), axis=1)
@@ -72,7 +72,7 @@ def main(cfg: DictConfig) -> None:
 
     for idx, row in fake_subscribers.iterrows():
 
-        curr_sub = row.uid
+        curr_sub = row.sub_uid
 
         # sample a random hour as starting point, this is
         # done to reflect the nature of data in data lake,
@@ -83,7 +83,7 @@ def main(cfg: DictConfig) -> None:
         # sample home loc for sub, coin this as curr loc
         # let's assume that the first transaction of the
         # month is the home loc of the sub (site level)
-        curr_loc = fake_cellsites.uid.sample(1).item()
+        curr_loc = fake_cellsites.cel_uid.sample(1).item()
 
         for dt in period:
 
@@ -126,8 +126,8 @@ def main(cfg: DictConfig) -> None:
                 pd.concat([fake_transactions, data], ignore_index=True)
         
     # save file to local disk
-    fake_transactions["uid"] = [f"glo-txn-{str(i+1).zfill(5)}" for i in range(len(fake_transactions))]
-    fake_transactions = fake_transactions[["uid", "sub_id", "cel_id", "transaction_dt", "transaction_hr"]]
+    fake_transactions["txn_uid"] = [f"glo-txn-{str(i+1).zfill(5)}" for i in range(len(fake_transactions))]
+    fake_transactions = fake_transactions[["txn_uid", "sub_id", "cel_id", "transaction_dt", "transaction_hr"]]
     fake_transactions.to_csv(filepath_transactions, index=False)
     print(f"OK. Successfully saved '{filepath_transactions}'")
 
