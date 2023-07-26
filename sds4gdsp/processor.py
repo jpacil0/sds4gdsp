@@ -7,7 +7,7 @@ from shapely.wkt import loads
 from itertools import combinations
 from networkx import Graph
 from pandarallel import pandarallel
-pandarallel.initialize(progress_bar=False)
+pandarallel.initialize(verbose=0, progress_bar=False)
 
 def get_coords_from_graph(G: Graph, nodes: List[int]):
     """Fetch lat/lng coords from graph given a list of nodes."""
