@@ -8,7 +8,6 @@ curr_dir = os.getcwd()
 print(f"working @: {curr_dir}")
 
 import random
-import shapely
 import pendulum
 import pandas as pd
 from itertools import permutations
@@ -127,29 +126,3 @@ for idx, row in fake_subscribers.iterrows():
         )
         fake_transactions = \
             pd.concat([fake_transactions, data], ignore_index=True)
-        
-# TESTING OF SUB DIAL
-d = fake_transactions.copy()
-sample_sub = d.sample(1).sub_id.item()
-d = d.loc[d.sub_id==sample_sub]
-days = d.transaction_dt.unique().tolist()
-route_figs = []
-for sample_day in days:
-    sites = fake_transactions\
-        .loc[fake_transactions.sub_id==sample_sub]\
-        .loc[fake_transactions.transaction_dt==sample_day]\
-        .cel_id.tolist()
-    points = list(map(lambda z: convert_cel_to_point(z, fake_cellsites), sites))
-    r = shapely.geometry.LineString(points)
-    route_figs.append(get_route_fig(r))
-for idx, fig in enumerate(route_figs):
-    fname = "sample/{}_tmp.jpg".format(idx+1)
-    fig.savefig(fname)
-imgs = load_images("sample")
-plot_images(imgs)
-
-
-# TODO:
-# 1. Add total travel distance
-# 2. Add radius of gyration
-# 3. Add activity entropy
