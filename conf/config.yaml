@@ -7,6 +7,7 @@ fake_subscribers:
     max_age: 72 # life expectancy in ph ao 2022
 
 fake_cellsites:
+    filepath: data/fake_cellsites.csv
     gadm_version: 4.0 # see https://gadm.org/data.html
     sample_frac: 0.5 # how much to keep from init node count
     min_distance: 300 # this is haversine distance in meters
