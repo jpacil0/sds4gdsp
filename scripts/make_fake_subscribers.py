@@ -17,7 +17,7 @@ from faker import Faker
 def main(cfg: DictConfig) -> None:
 
     seed = cfg.seed
-    filepath = cfg.fake_subscribers.filepath
+    filepath_subscribers = cfg.fake_subscribers.filepath_subscribers
     num_subs = cfg.fake_subscribers.num_subs
     min_age = cfg.fake_subscribers.min_age
     max_age = cfg.fake_subscribers.max_age
@@ -49,8 +49,8 @@ def main(cfg: DictConfig) -> None:
         )
         fake_subscribers = pd.concat([fake_subscribers, data], ignore_index=True)
 
-    fake_subscribers.to_csv(filepath, index=False)
-    print(f"OK. Successfully saved '{filepath}'")
+    fake_subscribers.to_csv(filepath_subscribers, index=False)
+    print(f"OK. Successfully saved '{filepath_subscribers}'")
 
 if __name__ == "__main__":
     main()

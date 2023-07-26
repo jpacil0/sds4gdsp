@@ -26,7 +26,8 @@ from sds4gdsp.processor import get_coords_from_graph, dedupe_points
 def main(cfg: DictConfig) -> None:
 
     seed = cfg.seed
-    filepath = cfg.fake_cellsites.filepath
+    filepath_cellsites = cfg.fake_cellsites.filepath_cellsites
+    filepath_cellsites_picture = cfg.fake_cellsites.filepath_cellsites_picture
     gadm_version = cfg.fake_cellsites.gadm_version
     sample_frac = cfg.fake_cellsites.sample_frac
     min_distance = cfg.fake_cellsites.min_distance
@@ -93,22 +94,21 @@ def main(cfg: DictConfig) -> None:
     deduped_points = dedupe_points(points, min_distance)
 
     # check sampled points vis-a-vis the nodes of original graph
-    filepath = "docs/fake_cellsites.png"
     fig, ax = plt.subplots(1, 1, figsize=(10, 10))
     gpd.GeoSeries(points).plot(ax=ax, color="red", alpha=0.4, markersize=50)
     gpd.GeoSeries(map(lambda s: shapely.wkt.loads(s), deduped_points)).plot(markersize=100, color="blue", alpha=1, ax=ax)
     ax.plot(*polygon.geoms[0].exterior.xy, linewidth=5, zorder=0)
     ax.legend(["road intersection", "cellsite", "town boundary"], loc="lower right", facecolor="white", framealpha=1)
     ax.ticklabel_format(useOffset=False)
-    plt.savefig(filepath)
+    plt.savefig(filepath_cellsites_picture)
 
     # save file to local disk
     fake_cellsites = pd.DataFrame(dict(
         uid=[f"glo-cel-{str(i+1).zfill(3)}" for i in range(len(deduped_points))],
         coords=deduped_points
     ))
-    fake_cellsites.to_csv(filepath, index=False)
-    print(f"OK. Successfully saved '{filepath}'")
+    fake_cellsites.to_csv(filepath_cellsites, index=False)
+    print(f"OK. Successfully saved '{filepath_cellsites}'")
 
 if __name__ == "__main__":
     main()

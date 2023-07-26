@@ -19,9 +19,9 @@ from sds4gdsp.processor import calc_haversine_distance
 def main(cfg: DictConfig) -> None:
 
     seed = cfg.seed
-    filepath = cfg.fake_transactions.filepath
-    filepath_subscribers = cfg.fake_subscribers.filepath
-    filepath_cellsites = cfg.fake_cellsites.filepath
+    filepath_transactions = cfg.fake_transactions.filepath_transactions
+    filepath_subscribers = cfg.fake_subscribers.filepath_subscribers
+    filepath_cellsites = cfg.fake_cellsites.filepath_cellsites
     k_nearest_neighbor = cfg.fake_transactions.k_nearest_neighbor
     start_date = cfg.fake_transactions.start_date
     num_days = cfg.fake_transactions.num_days
@@ -128,8 +128,8 @@ def main(cfg: DictConfig) -> None:
     # save file to local disk
     fake_transactions["uid"] = [f"glo-txn-{str(i+1).zfill(5)}" for i in range(len(fake_transactions))]
     fake_transactions = fake_transactions[["uid", "sub_id", "cel_id", "transaction_dt", "transaction_hr"]]
-    fake_transactions.to_csv(filepath, index=False)
-    print(f"OK. Successfully saved '{filepath}'")
+    fake_transactions.to_csv(filepath_transactions, index=False)
+    print(f"OK. Successfully saved '{filepath_transactions}'")
 
 if __name__ == "__main__":
     main()
