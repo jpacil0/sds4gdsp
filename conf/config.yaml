@@ -1,20 +1,21 @@
 seed: 2023
 
 fake_subscribers:
-    filepath: data/fake_subscribers.csv
+    filepath_subscribers: data/fake_subscribers.csv
     num_subs: 100
     min_age: 18 # legal age in ph, just a heuristic
     max_age: 72 # life expectancy in ph ao 2022
 
 fake_cellsites:
-    filepath: data/fake_cellsites.csv
+    filepath_cellsites: data/fake_cellsites.csv
+    filepath_cellsites_picture: docs/fake_cellsites.png
     gadm_version: 4.0 # see https://gadm.org/data.html
     sample_frac: 0.5 # how much to keep from init node count
     min_distance: 300 # this is haversine distance in meters
     town_keyword: Taguig
 
 fake_transactions:
-    filepath: data/fake_transactions.csv
+    filepath_transactions: data/fake_transactions.csv
     # two params below controls the "random-ness" of hop simulation
     k_nearest_neighbor: 3
     stay_proba: 0.5
