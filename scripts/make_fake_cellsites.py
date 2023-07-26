@@ -4,10 +4,10 @@ and is unique per location (node in the graph); this does not reflect the real-w
 OUTPUT: 'data/fake_cellsites.csv'
 """
 
-# import os
-# os.chdir("../")
-# curr_dir = os.getcwd()
-# print(f"working @: {curr_dir}")
+import os
+os.chdir("../")
+curr_dir = os.getcwd()
+print(f"working @: {curr_dir}")
 
 import random
 import shapely
@@ -28,7 +28,7 @@ seed = cfg.seed
 gadm_version = cfg.fake_cellsites.gadm_version
 sample_frac = cfg.fake_cellsites.sample_frac
 min_distance = cfg.fake_cellsites.min_distance
-town_keyword = cfg.fake_cellsits.town_keyword
+town_keyword = cfg.fake_cellsites.town_keyword
 
 # for reproducibility
 random.seed(seed)
@@ -103,7 +103,7 @@ plt.savefig(filepath)
 # save file to local disk
 filepath = f"data/fake_cellsites.csv"
 fake_cellsites = pd.DataFrame(dict(
-    uid=[f"glo-cel-{i}" for i in range(1, len(deduped_points)+1)],
+    uid=[f"glo-cel-{str(i+1).zfill(3)}" for i in range(len(deduped_points))],
     coords=deduped_points
 ))
 fake_cellsites.to_csv(filepath, index=False)
