@@ -6,3 +6,5 @@ cache/*
 .vscode/
 sample/*
 data/fake_transactions.csv
+outputs
+scripts/__pycache__/*

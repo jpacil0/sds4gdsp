@@ -2,10 +2,12 @@
 OUTPUT: 'data/fake_transactions.csv'
 """
 
-import os
-os.chdir("../")
-curr_dir = os.getcwd()
-print(f"working @: {curr_dir}")
+# import os
+# os.chdir("../")
+# curr_dir = os.getcwd()
+# print(f"working @: {curr_dir}")
+
+import hydra
 
 import random
 import pendulum

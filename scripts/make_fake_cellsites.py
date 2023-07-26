@@ -4,10 +4,10 @@ and is unique per location (node in the graph); this does not reflect the real-w
 OUTPUT: 'data/fake_cellsites.csv'
 """
 
-import os
-os.chdir("../")
-curr_dir = os.getcwd()
-print(f"working @: {curr_dir}")
+# import os
+# os.chdir("../")
+# curr_dir = os.getcwd()
+# print(f"working @: {curr_dir}")
 
 import random
 import shapely
