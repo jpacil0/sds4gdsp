@@ -37,4 +37,5 @@ def plot_images(imgs, nrows=5, ncols=6, figsize=(10, 10)):
     plt.show()
     return fig
 
-def get_day_in_a_life()
+def get_day_in_a_life():
+    return 1

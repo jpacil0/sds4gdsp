@@ -115,8 +115,8 @@ def main(cfg: DictConfig) -> None:
             # append to fake transactions
             data = pd.DataFrame(
                 data=dict(
-                    sub_id=subs,
-                    cel_id=locs,
+                    sub_uid=subs,
+                    cel_uid=locs,
                     transaction_dt=dts,
                     transaction_hr=hrs
                 ),
@@ -127,7 +127,7 @@ def main(cfg: DictConfig) -> None:
         
     # save file to local disk
     fake_transactions["txn_uid"] = [f"glo-txn-{str(i+1).zfill(5)}" for i in range(len(fake_transactions))]
-    fake_transactions = fake_transactions[["txn_uid", "sub_id", "cel_id", "transaction_dt", "transaction_hr"]]
+    fake_transactions = fake_transactions[["txn_uid", "sub_uid", "cel_uid", "transaction_dt", "transaction_hr"]]
     fake_transactions.to_csv(filepath_transactions, index=False)
     print(f"OK. Successfully saved '{filepath_transactions}'")
 
