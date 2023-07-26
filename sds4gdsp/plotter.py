@@ -13,6 +13,7 @@ def get_route_fig(r):
     gpd.GeoSeries(dest).plot(ax=ax, color="green", markersize=250, zorder=2, alpha=0.8)
     plt.axis("off")
     ax.ticklabel_format(useOffset=False)
+    plt.close()
     return fig
 
 def load_images(dirpath, extension=".jpg"):
@@ -35,3 +36,5 @@ def plot_images(imgs, nrows=5, ncols=6, figsize=(10, 10)):
     plt.tight_layout()
     plt.show()
     return fig
+
+def get_day_in_a_life()
