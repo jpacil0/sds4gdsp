@@ -97,6 +97,7 @@ def main(cfg: DictConfig) -> None:
 
             for hr in range(curr_hr+1, HRS_IN_A_DAY):
 
+                # TODO: add variable stay proba, 0.1 to 0.9
                 with_transaction = random.choices([True, False], [1-stay_proba, stay_proba])[0]
 
                 if with_transaction:
