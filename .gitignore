@@ -8,3 +8,6 @@ sample/*
 data/*
 outputs
 scripts/__pycache__/*
+.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
+sds4gdsp/.ipynb_checkpoints/
