@@ -18,7 +18,6 @@ fake_transactions:
     filepath_transactions: data/fake_transactions.csv
     # two params below controls the "random-ness" of hop simulation
     k_nearest_neighbor: 3
-    stay_proba: 0.8
     start_date: '2023-06-01'
     num_days: 30
     # https://www.dailymail.co.uk/sciencetech/article-3042230/Sleeping-habits-world-revealed-wakes-grumpy-China-best-quality-shut-eye-South-Africa-wakes-earliest.html

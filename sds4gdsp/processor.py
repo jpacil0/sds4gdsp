@@ -8,6 +8,12 @@ from itertools import combinations
 from networkx import Graph
 from pandarallel import pandarallel
 pandarallel.initialize(verbose=0, progress_bar=False)
+from scipy.stats import truncnorm
+
+def get_truncated_normal(mean=0, sd=1, low=0, upp=10):
+    return truncnorm(
+        (low - mean) / sd, (upp - mean) / sd, loc=mean, scale=sd
+    )
 
 def get_coords_from_graph(G: Graph, nodes: List[int]):
     """Fetch lat/lng coords from graph given a list of nodes."""

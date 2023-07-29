@@ -13,7 +13,7 @@ import pendulum
 import pandas as pd
 from itertools import permutations
 from omegaconf import DictConfig
-from sds4gdsp.processor import calc_haversine_distance
+from sds4gdsp.processor import calc_haversine_distance, get_truncated_normal
 
 @hydra.main(version_base=None, config_path="../conf", config_name="config")
 def main(cfg: DictConfig) -> None:
@@ -23,18 +23,20 @@ def main(cfg: DictConfig) -> None:
     filepath_subscribers = cfg.fake_subscribers.filepath_subscribers
     filepath_cellsites = cfg.fake_cellsites.filepath_cellsites
     k_nearest_neighbor = cfg.fake_transactions.k_nearest_neighbor
+    cap_start_hr = cfg.fake_transactions.cap_start_hr
     start_date = cfg.fake_transactions.start_date
     num_days = cfg.fake_transactions.num_days
-    cap_start_hr = cfg.fake_transactions.cap_start_hr
-    stay_proba = cfg.fake_transactions.stay_proba
 
     HRS_IN_A_DAY = 24
 
     # for reproducibility
     random.seed(seed)
 
-    # load relevant datasets
+    # load fake subs dataset then perform row shuffling
     fake_subscribers = pd.read_csv(filepath_subscribers)
+    fake_subscribers = fake_subscribers.sample(frac=1).reset_index(drop=True)
+    
+    # load fake cellsites dataset (contains WKT string)
     fake_cellsites = pd.read_csv(filepath_cellsites)
 
     # start off with a cellsite permutation reference table
@@ -70,9 +72,28 @@ def main(cfg: DictConfig) -> None:
 
     fake_transactions = pd.DataFrame()
 
+    # assumption: stay proba of subs exhibit a normal dist with the ff params
+    mean_tnorm_dist = 0.5
+    sd_tnorm_dist = 0.1
+    low_tnorm_dist = 0.1
+    upp_tnorm_dist = 0.9
+    tnorm_dist = get_truncated_normal(
+        mean=mean_tnorm_dist,
+        sd=sd_tnorm_dist,
+        low=low_tnorm_dist,
+        upp=upp_tnorm_dist
+    )
+    size_tnorm_dist = len(fake_subscribers)
+    fake_subscribers["stay_proba"] = list(map(lambda z: round(z, 1), tnorm_dist.rvs(size_tnorm_dist)))
+
     for idx, row in fake_subscribers.iterrows():
 
+        # fetch sub
         curr_sub = row.sub_uid
+        
+        # this adds variability to the mobility patterns of the subs, there
+        # should be subs with low mobility (high stay proba) and vice versa
+        stay_proba = row.stay_proba
 
         # sample a random hour as starting point, this is
         # done to reflect the nature of data in data lake,
@@ -97,7 +118,6 @@ def main(cfg: DictConfig) -> None:
 
             for hr in range(curr_hr+1, HRS_IN_A_DAY):
 
-                # TODO: add variable stay proba, 0.1 to 0.9
                 with_transaction = random.choices([True, False], [1-stay_proba, stay_proba])[0]
 
                 if with_transaction:
