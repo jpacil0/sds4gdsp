@@ -1,6 +1,7 @@
 import math
 import numpy as np
 import pandas as pd
+from functools import reduce
 from shapely.geometry import Point
 from typing import List
 from shapely.wkt import loads
@@ -67,3 +68,12 @@ def convert_distances_to_probas(distances) -> np.ndarray:
 
 def scale_feature(feature, scaler) -> np.ndarray:
     return scaler.fit_transform(np.array(feature).reshape(-1, 1)).flatten()
+
+def calc_total_travel_distance(traj):
+    coords = traj.coords.tolist()
+    od_pairs = list(zip(coords, coords[1:]))
+    total_travel_distance = reduce(
+        lambda a, b: a + b,
+        list(map(lambda p: calc_haversine_distance(*p), od_pairs))
+    )
+    return total_travel_distance
