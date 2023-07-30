@@ -37,5 +37,27 @@ def plot_images(imgs, nrows=5, ncols=6, figsize=(10, 10)):
     plt.show()
     return fig
 
+def visualize_route(traj):
+    coords = traj.coords.tolist()
+    od_pairs = list(zip(coords, coords[1:]))
+    routes = []
+    for od_pair in od_pairs:
+        routes.append(
+            shapely.geometry.LineString(
+                map(shapely.wkt.loads, od_pair)
+            )
+        )
+    fig, ax = plt.subplots(1, figsize=(7, 5))
+    gpd.GeoSeries(traj["coords"].apply(shapely.wkt.loads)).plot(ax=ax, color="red", markersize=50, alpha=0.5, zorder=2);
+    gpd.GeoSeries(traj.head(1)["coords"].apply(shapely.wkt.loads)).plot(ax=ax, color="green", markersize=150, marker="P", zorder=3);
+    gpd.GeoSeries(traj.tail(1)["coords"].apply(shapely.wkt.loads)).plot(ax=ax, color="green", markersize=150, marker="X", zorder=3);
+    gpd.GeoSeries(routes).plot(ax=ax, color="blue", linewidth=2, zorder=1, alpha=0.5)
+    ax.ticklabel_format(useOffset=False)
+    ax.legend(["_", "orig", "dest"])
+    plt.tight_layout()
+    plt.axis("off")
+    plt.close()
+    return fig
+
 def get_day_in_a_life():
     return 1
