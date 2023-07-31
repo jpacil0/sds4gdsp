@@ -77,3 +77,18 @@ def calc_total_travel_distance(traj):
         list(map(lambda p: calc_haversine_distance(*p), od_pairs))
     )
     return total_travel_distance
+
+def fetch_total_travel_distance(traj):
+    coords = traj.coords.tolist()
+    od_pairs = list(zip(coords, coords[1:]))
+    dts = traj.transaction_dt.tolist()
+    hrs = traj.transaction_hr.tolist()
+    cels = traj.cel_uid.tolist()
+    hr_pairs = list(zip(hrs, hrs[1:]))
+    travel_distances = list(map(lambda p: calc_haversine_distance(*p), od_pairs))
+    dt_df = pd.DataFrame(list(zip(dts, dts[1:])), columns=["orig_dt", "dest_dt"])
+    hr_df = pd.DataFrame(list(zip(hrs, hrs[1:])), columns=["orig_hr", "dest_hr"])
+    cel_df = pd.DataFrame(list(zip(cels, cels[1:])), columns=["orig_cel", "dest_cel"])
+    data = pd.concat([dt_df, hr_df, cel_df], axis=1)
+    data["travel_distance"] = travel_distances
+    return data.loc[data.travel_distance>0].reset_index(drop=True)

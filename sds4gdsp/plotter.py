@@ -59,5 +59,29 @@ def visualize_route(traj):
     plt.close()
     return fig
 
+def viz_total_travel_distance(sample_traj_low, sample_traj_mid, sample_traj_high):
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 5))
+    sample_low = fetch_total_travel_distance(sample_traj_low)
+    sample_mid = fetch_total_travel_distance(sample_traj_mid)
+    sample_high = fetch_total_travel_distance(sample_traj_high)
+    sample_low["orig_dt"] = pd.to_datetime(sample_low["orig_dt"])
+    sample_mid["orig_dt"] = pd.to_datetime(sample_mid["orig_dt"])
+    sample_high["orig_dt"] = pd.to_datetime(sample_high["orig_dt"])
+    sample_low.groupby("orig_dt")["travel_distance"].sum().plot(ax=ax1, color="red", kind="line")
+    sample_mid.groupby("orig_dt")["travel_distance"].sum().plot(ax=ax1, color="blue", kind="line")
+    sample_high.groupby("orig_dt")["travel_distance"].sum().plot(ax=ax1, color="green", kind="line")
+    sample_low.groupby("orig_dt")["travel_distance"].sum().plot(ax=ax2, color="red", kind="density")
+    sample_mid.groupby("orig_dt")["travel_distance"].sum().plot(ax=ax2, color="blue", kind="density")
+    sample_high.groupby("orig_dt")["travel_distance"].sum().plot(ax=ax2, color="green", kind="density")
+    ax1.set_ylabel("travel distance (in KM)")
+    ax2.set_ylabel("density")
+    ax1.set_xlabel("")
+    ax2.set_xlabel("travel distance (in KM)")
+    ax1.legend(["low", "mid", "high"], frameon=False)
+    ax2.legend(["low", "mid", "high"], frameon=False)
+    plt.tight_layout()
+    plt.close();
+    return fig
+
 def get_day_in_a_life():
     return 1
