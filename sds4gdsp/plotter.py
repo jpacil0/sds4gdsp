@@ -48,10 +48,10 @@ def visualize_route(traj):
             )
         )
     fig, ax = plt.subplots(1, figsize=(7, 5))
-    gpd.GeoSeries(traj["coords"].apply(shapely.wkt.loads)).plot(ax=ax, color="red", markersize=50, alpha=0.5, zorder=2);
-    gpd.GeoSeries(traj.head(1)["coords"].apply(shapely.wkt.loads)).plot(ax=ax, color="green", markersize=150, marker="P", zorder=3);
-    gpd.GeoSeries(traj.tail(1)["coords"].apply(shapely.wkt.loads)).plot(ax=ax, color="green", markersize=150, marker="X", zorder=3);
-    gpd.GeoSeries(routes).plot(ax=ax, color="blue", linewidth=2, zorder=1, alpha=0.5)
+    gpd.GeoSeries(traj["coords"].apply(shapely.wkt.loads)).plot(ax=ax, color="blue", markersize=60, zorder=2);
+    gpd.GeoSeries(traj.head(1)["coords"].apply(shapely.wkt.loads)).plot(ax=ax, color="green", markersize=120, zorder=3);
+    gpd.GeoSeries(traj.tail(1)["coords"].apply(shapely.wkt.loads)).plot(ax=ax, color="red", markersize=120, zorder=3);
+    gpd.GeoSeries(routes).plot(ax=ax, color="grey", linewidth=3, zorder=1, alpha=0.6)
     ax.ticklabel_format(useOffset=False)
     ax.legend(["_", "orig", "dest"])
     plt.tight_layout()
