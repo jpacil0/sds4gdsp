@@ -10,7 +10,6 @@ osmnx==1.2.2
 pandarallel==1.6.5
 pandas==2.0.1
 pendulum==2.1.2
-Pillow==9.5.0
 Pillow==10.0.0
-scipy==1.11.1
+scipy==1.10.1
 Shapely==1.8.5.post1
