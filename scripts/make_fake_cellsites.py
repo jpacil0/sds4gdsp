@@ -32,13 +32,13 @@ def main(cfg: DictConfig) -> None:
     sample_frac = cfg.fake_cellsites.sample_frac
     min_distance = cfg.fake_cellsites.min_distance
     town_keyword = cfg.fake_cellsites.town_keyword
+    ad_level = cfg.fake_cellsites.ad_level
 
     # for reproducibility
     random.seed(seed)
 
     # download gadm PH data
     country_name = "Philippines"
-    ad_level = 2 # city or municipality
     downloader = GADMDownloader(version=str(gadm_version))
     gadm = downloader.get_shape_data_by_country_name(
         country_name=country_name, ad_level=ad_level
