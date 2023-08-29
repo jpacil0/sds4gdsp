@@ -13,11 +13,11 @@ Please execute the following steps in your local machine.
 1. Clone the **sds4gdsp** github repository from this link <br>
 ```git clone https://github.com/jpacil0/sds4gdsp.git```
 
-2. Create a conda environment named **gdsenv** with **python=3.8.16** <br>
+2. Create (then activate) a virtual environment named **gdsenv** with **python=3.8.16** <br>
 ```conda create --name gdsenv python=3.8.16```
 
 3. Install **jupyterlab** and **leafmap** separately in that environment, we will use this for the workshop <br>
-```pip install jupyterlab```
+```pip install jupyterlab``` <br>
 ```conda install leafmap -c conda-forge```
 
 5. Install the packages from the **requirements.txt**, follow the **README.md** <br>
