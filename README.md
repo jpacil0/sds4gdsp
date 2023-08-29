@@ -1,6 +1,6 @@
 # SDS4GDSP
 
-Spatial Data Science for the Globe Data Science Program (SDS4GDSP) is the dedicated workshop material for the incoming batch of Globe DSP Cadets.
+Spatial Data Science for the Globe Data Science Program (SDS4GDSP) is the dedicated workshop material for the incoming batch of Globe DSP Cadets aimed to equip the reader with the basic skills to process and unravel spatial insights using geospatial data.
 
 1. Introduction: Grammar of Spatial Data Science
 2. Application: Calculating Telco Mobility Index
