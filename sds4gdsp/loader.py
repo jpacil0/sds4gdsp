@@ -24,7 +24,7 @@ def make_lines(points):
 def make_polygon(points):
     return Polygon(points)
 
-def make_geoms(n):
+def make_spatial_data(n):
     coords = np.random.random((n, 2))
     points = list(map(lambda z: Point(z), coords))
     lines = LineString(points)
@@ -35,6 +35,7 @@ def make_geoms(n):
 def make_graph(
     origin, network_type, dist=500, dist_type="bbox", retain_all=False, simplify=True
 ):
+    # query the road network using OSMNx
     G = ox.graph_from_point(
         center_point=origin, # origin point of query
         dist=dist, # radius in meters from the origin
