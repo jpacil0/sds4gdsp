@@ -48,7 +48,7 @@ sds4gdsp/data/
 
 ## 3. Lecture
 
-This workshop is a two-way street. Pay attention to the lecture, follow-along with the given code, ask questions, and give feedback!
+This workshop is a two-way street. Pay attention to the lecture, follow-along with the code, ask questions, and give feedback!
 
 1. Introduction: Grammar of Spatial Data Science
 2. Application: Calculating Telco Mobility Index
