@@ -1,3 +1,6 @@
+# you can configure the parameters to generate fake data below 
+# https://hydra.cc/docs/tutorials/basic/your_first_app/simple_cli/
+
 seed: 2023
 
 fake_subscribers:
